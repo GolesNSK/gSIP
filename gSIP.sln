@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Channels", "gSIP.Chann
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Common", "gSIP.Common\gSIP.Common.csproj", "{02B799AF-FEF9-463C-BE5B-C8D152F86C7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Logger", "gSIP.Logger\gSIP.Logger.csproj", "{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{02B799AF-FEF9-463C-BE5B-C8D152F86C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02B799AF-FEF9-463C-BE5B-C8D152F86C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02B799AF-FEF9-463C-BE5B-C8D152F86C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
