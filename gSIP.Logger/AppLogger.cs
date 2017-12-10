@@ -8,7 +8,7 @@ namespace gSIP.Logger
     /// <summary>
     /// Статический класс для ведения журнала событий приложения.
     /// </summary>
-    public class Logger
+    public class AppLogger
     {
         /// <summary>
         /// Логгер по умолчанию (должен присутствовать в секции настроек log4net файла App.config
@@ -36,7 +36,7 @@ namespace gSIP.Logger
         /// <summary>
         /// Статический конструктор для инициализации объекта Logger.
         /// </summary>
-        static Logger()
+        static AppLogger()
         {
             if (dl == null)
             {
