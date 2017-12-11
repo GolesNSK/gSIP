@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Channels", "gSIP.Channels\gSIP.Channels.csproj", "{E3DA175A-0774-4CA9-A1A5-654BBCB69A31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Common", "gSIP.Common\gSIP.Common.csproj", "{02B799AF-FEF9-463C-BE5B-C8D152F86C7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Logger", "gSIP.Logger\gSIP.Logger.csproj", "{A9AD4481-88D5-4C4D-8A82-DD187387DD3A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BBD3C45-A67C-4558-95D5-EBBB636DAB04}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		LICENSE.ru = LICENSE.ru
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

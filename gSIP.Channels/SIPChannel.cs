@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
+﻿using log4net;
 using gSIP.Logger;
 using gSIP.Common;
 
@@ -12,7 +7,7 @@ namespace gSIP.Channels
     /// <summary>
     /// Абстрактный класс для реализации канального уровня передачи данных.
     /// </summary>
-    public abstract class SIPBaseChannel
+    public abstract class SIPChannel
     {
         /// <summary>
         /// Логгер для ведения журнала событий приложения.
@@ -22,12 +17,12 @@ namespace gSIP.Channels
         /// <summary>
         /// Очередь для полученных по сети данных.
         /// </summary>
-        protected DataQueue<RawIncomingData> receiveQueue;
+        protected DataQueue<SIPRawDataReceive> receiveQueue;
 
         /// <summary>
         /// Очередь для данных предназначенных для отправки по сети.
         /// </summary>
-        protected DataQueue<RawOutgoingData> sendQueeue;
+        protected DataQueue<SIPRawDataSend> sendQueeue;
 
         /// <summary>
         /// Локальная сетевая конечная точка.

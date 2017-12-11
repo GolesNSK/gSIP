@@ -20,7 +20,7 @@ namespace gSIP.Common
         /// <summary>
         /// Тип протокола канала передачи данных.
         /// </summary>
-        public ProtocolType Protocol { get; private set; }
+        public SIPProtocolType Protocol { get; private set; }
 
         /// <summary>
         /// Конструктор класса SIPEndPoint по умолчанию.
@@ -37,7 +37,7 @@ namespace gSIP.Common
         /// <param name="address">IP-адрес сетевой конечной точки.</param>
         /// <param name="port">Порт сетевой конечной точки.</param>
         /// <param name="protocol">Сетевой протокол.</param>
-        public SIPEndPoint(IPAddress address, int port, ProtocolType protocol)
+        public SIPEndPoint(IPAddress address, int port, SIPProtocolType protocol)
         {
             EndPoint = new IPEndPoint(address, port);
             Protocol = protocol;
@@ -48,7 +48,7 @@ namespace gSIP.Common
         /// </summary>
         /// <param name="endPoint">Сетевая конечная точка содержащая IP-адрес и порт.</param>
         /// <param name="protocol">Сетевой протокол.</param>
-        public SIPEndPoint(IPEndPoint endPoint, ProtocolType protocol)
+        public SIPEndPoint(IPEndPoint endPoint, SIPProtocolType protocol)
         {
             EndPoint = endPoint;
             Protocol = protocol;
