@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Channels", "gSIP.Channels\gSIP.Channels.csproj", "{E3DA175A-0774-4CA9-A1A5-654BBCB69A31}"
 EndProject
@@ -11,12 +11,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Logger", "gSIP.Logger\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BBD3C45-A67C-4558-95D5-EBBB636DAB04}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		LICENSE = LICENSE
 		LICENSE.ru = LICENSE.ru
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.CommonTests", "gSIP.CommonTests\gSIP.CommonTests.csproj", "{76C24BBA-D5EE-47AD-8F10-84EC95DB55EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gSIP.Message", "gSIP.Message\gSIP.Message.csproj", "{4982D864-1EF3-4A85-9687-190A01EBF763}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppExample", "ConsoleAppExample\ConsoleAppExample.csproj", "{14FEBA81-A602-4EA4-A077-1A02E62D0000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +46,14 @@ Global
 		{76C24BBA-D5EE-47AD-8F10-84EC95DB55EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76C24BBA-D5EE-47AD-8F10-84EC95DB55EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76C24BBA-D5EE-47AD-8F10-84EC95DB55EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4982D864-1EF3-4A85-9687-190A01EBF763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4982D864-1EF3-4A85-9687-190A01EBF763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4982D864-1EF3-4A85-9687-190A01EBF763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4982D864-1EF3-4A85-9687-190A01EBF763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14FEBA81-A602-4EA4-A077-1A02E62D0000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14FEBA81-A602-4EA4-A077-1A02E62D0000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14FEBA81-A602-4EA4-A077-1A02E62D0000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14FEBA81-A602-4EA4-A077-1A02E62D0000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

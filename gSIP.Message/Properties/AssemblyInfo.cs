@@ -4,15 +4,15 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("gSIP.Channels")]
-[assembly: AssemblyDescription("gSIP Channels Library")]
+[assembly: AssemblyTitle("gSIP.Message")]
+[assembly: AssemblyDescription("gSIP SIP Message Library")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else
  [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("gSIP.Channels")]
+[assembly: AssemblyProduct("gSIP.Message")]
 [assembly: AssemblyCopyright("Copyright © Pavel Goleshchikhin 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("e3da175a-0774-4ca9-a1a5-654bbcb69a31")]
+[assembly: Guid("4982d864-1ef3-4a85-9687-190a01ebf763")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

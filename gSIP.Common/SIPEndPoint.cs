@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 
 namespace gSIP.Common
 {
@@ -22,7 +23,7 @@ namespace gSIP.Common
         /// Конструктор класса SIPEndPoint.
         /// </summary>
         /// <param name="address">IP-адрес сетевой конечной точки.</param>
-        /// <param name="port">Порт сетевой конечной точки.</param>
+        /// <param name="port">Номер порта сетевой конечной точки.</param>
         /// <param name="protocol">Сетевой протокол.</param>
         /// <exception cref="System.ArgumentNullException">Исключение вызывается если address и/или protocol имеют значение null.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Исключение вызывается если значение переменной port выходит за диапазон от 0 до 65535.</exception>
@@ -43,7 +44,7 @@ namespace gSIP.Common
         /// <summary>
         /// Конструктор класса SIPEndPoint.
         /// </summary>
-        /// <param name="endPoint">Сетевая конечная точка содержащая IP-адрес и порт.</param>
+        /// <param name="endPoint">Сетевая конечная точка содержащая IP-адрес и номер порта.</param>
         /// <param name="protocol">Сетевой протокол.</param>
         /// <exception cref="System.ArgumentNullException">Исключение вызывается если endPoint и/или protocol имеют значение null.</exception>
         public SIPEndPoint(IPEndPoint endPoint, SIPProtocolType protocol)
@@ -84,6 +85,32 @@ namespace gSIP.Common
             hashCode = hashCode * -1521134295 + EndPoint.GetHashCode();
             hashCode = hashCode * -1521134295 + Protocol.GetHashCode();
             return hashCode;
+        }
+
+        /// <summary>
+        /// Получить строковое представление объекта.
+        /// </summary>
+        /// <returns>Возвращает строковое представление объекта.</returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder(30);
+
+            if (Protocol != null && !Protocol.Equals(SIPProtocolType.Unknown))
+            {
+                sb.Append(Protocol.ToString().ToUpper()).Append(" ");
+            }
+
+            if (EndPoint != null)
+            {
+                sb.Append(EndPoint.Address.ToString());
+
+                if (EndPoint.Port != 0)
+                {
+                    sb.Append(':').Append(EndPoint.Port);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
