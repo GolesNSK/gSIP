@@ -33,7 +33,7 @@
         /// <summary>
         /// Конструктор класса ProtocolType.
         /// </summary>
-        public SIPProtocolType() { }
+        //public SIPProtocolType() { }
 
         /// <summary>
         /// Конструктор класса ProtocolType.

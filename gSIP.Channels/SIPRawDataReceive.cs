@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using gSIP.Common;
 
 namespace gSIP.Channels
@@ -29,7 +33,7 @@ namespace gSIP.Channels
         public SIPChannel Channel;
 
         /// <summary>
-        /// Конструктор класса SIPRawDataReceive.
+        /// Конструктор класса RawIncomingData.
         /// </summary>
         /// <param name="data">Полученные данные в виде массива байт.</param>
         /// <param name="channel">Канал, через который получены данные.</param>

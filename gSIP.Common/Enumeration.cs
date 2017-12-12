@@ -94,7 +94,7 @@ namespace gSIP.Common
         /// <summary>
         /// Поиск по индексу.
         /// </summary>
-        /// <typeparam name="T">Тип объекта класса наследника абстроактного класса Enumeration.</typeparam>
+        /// <typeparam name="T">Тип объекта класса наследника абстрактного класса Enumeration.</typeparam>
         /// <param name="index">Значение Index, по которому осуществляется поиск.</param>
         /// <returns>
         /// Возвращает объект с искомым значением Index; 
@@ -129,7 +129,7 @@ namespace gSIP.Common
         /// <summary>
         /// Поиск по значению (регистронезависимый).
         /// </summary>
-        /// <typeparam name="T">Тип объекта класса наследника абстроактного класса Enumeration.</typeparam>
+        /// <typeparam name="T">Тип объекта класса наследника абстрактного класса Enumeration.</typeparam>
         /// <param name="value">Значение Value, по которому осуществляется поиск.</param>
         /// <returns>Возвращает объект с искомым значением Value или null, если объект не найден.</returns>
         public static T FromValue<T>(string value) where T : Enumeration, new()
