@@ -44,11 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chars\CharsSet.cs" />
+    <Compile Include="Chars\CharsSetAllowed.cs" />
+    <Compile Include="Chars\CharsSetDisallowed.cs" />
     <Compile Include="DataQueue.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SIPProtocolType.cs" />
     <Compile Include="SIPEndPoint.cs" />
+    <Compile Include="Strings\SIPString.cs" />
+    <Compile Include="Strings\SIPStringQuoted.cs" />
+    <Compile Include="Strings\SIPStringToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gSIP.Logger\gSIP.Logger.csproj">
