@@ -10,7 +10,7 @@ namespace gSIP.Channels
     /// <summary>
     /// Класс для представления необработанных данных полученных с помощью SIPChannel.
     /// </summary>
-    public class SIPRawData
+    public class SIPRawData : ICloneable
     {
         /// <summary>
         /// Полученные данные в виде массива байт.
@@ -56,6 +56,16 @@ namespace gSIP.Channels
             СreationDateTime = dateTime;
         }
 
+        /// <summary>
+        /// Создает новый объект, являющийся копией текущего экземпляра.
+        /// </summary>
+        /// <returns>Возвращает новый объект, являющийся копией этого экземпляра.</returns>
+        public object Clone()
+        {
+            byte[] dataСopy = new byte[Data.Length];
+            Buffer.BlockCopy(Data, 0, dataСopy, 0, Data.Length * sizeof(byte));
 
+            return new SIPRawData(dataСopy, (SIPEndPoint)RemoteSIPEndPoint.Clone(), СreationDateTime);
+        }
     }
 }

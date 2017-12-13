@@ -31,24 +31,25 @@ namespace gSIP.Channels
         /// Конструктор класса SIPUDPChannel.
         /// </summary>
         /// <param name="localEndPoint">Локальная сетевая конечная точка.</param>
-        public SIPUDPChannel(SIPEndPoint localEndPoint)
+        /// <param name="name">Наименование канала передачи данных.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Исключение вызывается в базовом классе, если localEndPoint и/или name имеют значение null.</exception>
+        public SIPUDPChannel(SIPEndPoint localEndPoint, string name) : base(localEndPoint, name)
         {
-            LocalEndPoint = localEndPoint;
-            IsClosed = true;
-            Start();
+            ProtocolType = SIPProtocolType.Udp;
         }
 
         /// <summary>
         /// Запуск UDP канала.
         /// </summary>
-        private void Start()
+        public override void Start()
         {
             if (IsClosed)
             {
                 IsClosed = false;
                 // Инициализация очередей для передачи данных между потоками
-                receiveQueue = new DataQueue<SIPRawDataReceive>();
-                sendQueeue = new DataQueue<SIPRawDataSend>();
+                receiveQueue = new DataQueue<SIPRawData>();
+                sendQueeue = new DataQueue<SIPRawData>();
 
                 // Инициализация нового экземпляра класса UdpClient и связывание его с заданной локальной конечной точкой
                 try
@@ -102,6 +103,45 @@ namespace gSIP.Channels
                 Log.DebugFormat("UDP канал с локальной конечной точкой {0} уже инициирован.",
                         LocalEndPoint.EndPoint.ToString());
             }
+        }
+
+        /// <summary>
+        /// Остановка работы UDP канала.
+        /// </summary>
+        public override void Stop()
+        {
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                udpClient.Close();
+                receiveQueue.Stop();
+                sendQueeue.Stop();
+                if (receiverThread != null)
+                {
+                    try
+                    {
+                        receiverThread.Join(1000);
+                        receiverThread.Abort();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn("Ошибка закрытия .",
+                        ex);
+                    }
+                    
+                }
+                if (senderThread != null)
+                {
+                    senderThread.Join(1000);
+                    senderThread.Abort();
+                }
+            }
+            else
+            {
+                Log.DebugFormat("UDP канал с локальной конечной точкой {0} еще не инициирован.",
+                        LocalEndPoint.EndPoint.ToString());
+            }
+            
         }
 
         /// <summary>
@@ -169,25 +209,16 @@ namespace gSIP.Channels
             Log.Debug("Передатчик UDP завершил работу.");
         }
 
-        /// <summary>
-        /// Остановка работы UDP канала.
-        /// </summary>
-        public override void Stop()
+        
+
+        public override void Receive()
         {
-            IsClosed = true;
-            udpClient.Close();
-            receiveQueue.Stop();
-            sendQueeue.Stop();
-            if (receiverThread != null)
-            {
-                receiverThread.Join(1000);
-                receiverThread.Abort();
-            }
-            if (senderThread != null)
-            {
-                senderThread.Join(1000);
-                senderThread.Abort();
-            }
+            throw new NotImplementedException();
+        }
+
+        public override void Send()
+        {
+            throw new NotImplementedException();
         }
     }
 }

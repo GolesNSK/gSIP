@@ -88,7 +88,7 @@ namespace gSIP.Common.Tests
                 Assert.IsTrue(ex is ArgumentNullException, "Constructor 06");
             }
 
-            // Проверка метода ToString()
+            // Проверка метода ToString
             sipEp1 = new SIPEndPoint(new IPEndPoint(IPAddress.Parse("172.16.1.200"), 5060), SIPProtocolType.Udp);
             Assert.AreEqual("UDP 172.16.1.200:5060", sipEp1.ToString(), "ToString 01");
 
@@ -100,6 +100,16 @@ namespace gSIP.Common.Tests
 
             sipEp1 = new SIPEndPoint(new IPEndPoint(IPAddress.Parse("172.16.1.200"), 0), SIPProtocolType.Unknown);
             Assert.AreEqual("172.16.1.200", sipEp1.ToString(), "ToString 04");
+
+            // Проверка метода Clone
+            sipEp5 = new SIPEndPoint(new IPEndPoint(IPAddress.Parse("172.16.1.200"), 5060), SIPProtocolType.Tcp);
+            sipEp3 = (SIPEndPoint)sipEp5.Clone();
+            sipEp4 = new SIPEndPoint(new IPEndPoint(IPAddress.Parse("172.16.1.200"), 5060), SIPProtocolType.Tcp);
+
+            Assert.IsTrue(sipEp5.Equals(sipEp3), "Clone 01");
+            Assert.IsTrue(sipEp3.Equals(sipEp4), "Clone 02");
+            sipEp5 = null;
+            Assert.IsTrue(sipEp3.Equals(sipEp4), "Clone 03");
         }
     }
 }

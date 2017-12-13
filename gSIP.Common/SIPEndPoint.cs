@@ -7,7 +7,7 @@ namespace gSIP.Common
     /// <summary>
     /// Класс для представления сетевой конечной точки.
     /// </summary>
-    public class SIPEndPoint : IEquatable<SIPEndPoint>
+    public class SIPEndPoint : IEquatable<SIPEndPoint>, ICloneable
     {
         /// <summary>
         /// Сетевая конечная точка в виде IP-адреса и номер порта.
@@ -25,8 +25,10 @@ namespace gSIP.Common
         /// <param name="address">IP-адрес сетевой конечной точки.</param>
         /// <param name="port">Номер порта сетевой конечной точки.</param>
         /// <param name="protocol">Сетевой протокол.</param>
-        /// <exception cref="System.ArgumentNullException">Исключение вызывается если address и/или protocol имеют значение null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Исключение вызывается если значение переменной port выходит за диапазон от 0 до 65535.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Исключение вызывается если address и/или protocol имеют значение null.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// Исключение вызывается если значение переменной port выходит за диапазон от 0 до 65535.</exception>
         public SIPEndPoint(IPAddress address, int port, SIPProtocolType protocol)
         {
             if (address == null)
@@ -46,7 +48,9 @@ namespace gSIP.Common
         /// </summary>
         /// <param name="endPoint">Сетевая конечная точка содержащая IP-адрес и номер порта.</param>
         /// <param name="protocol">Сетевой протокол.</param>
-        /// <exception cref="System.ArgumentNullException">Исключение вызывается если endPoint и/или protocol имеют значение null.</exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Исключение вызывается если endPoint и/или protocol имеют значение null.
+        /// </exception>
         public SIPEndPoint(IPEndPoint endPoint, SIPProtocolType protocol)
         {
             EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
@@ -111,6 +115,15 @@ namespace gSIP.Common
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Создает новый объект, являющийся копией текущего экземпляра.
+        /// </summary>
+        /// <returns>Возвращает новый объект, являющийся копией этого экземпляра.</returns>
+        public object Clone()
+        {
+            return new SIPEndPoint(new IPAddress(EndPoint.Address.GetAddressBytes()), EndPoint.Port, Protocol);
         }
     }
 }

@@ -47,8 +47,6 @@
     <Compile Include="SIPChannel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SIPRawData.cs" />
-    <Compile Include="SIPRawDataReceive.cs" />
-    <Compile Include="SIPRawDataSend.cs" />
     <Compile Include="SIPUDPChannel.cs" />
   </ItemGroup>
   <ItemGroup>

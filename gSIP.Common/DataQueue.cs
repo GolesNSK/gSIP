@@ -69,7 +69,11 @@ namespace gSIP.Common
                 }
                 catch (Exception ex)
                 {
-                    Log.Warn("Ошибка управления очередью DataQueue<T> при добавлении объекта.", ex);
+                    Log.Warn("Ошибка управления очередью " + 
+                        nameof(this.Enqueue) + 
+                        " при добавлении объекта " + 
+                        nameof(item) + ".",
+                        ex);
                 }
             }
         }
@@ -89,7 +93,11 @@ namespace gSIP.Common
                 }
                 catch (Exception ex)
                 {
-                    Log.Warn("Ошибка управления очередью DataQueue<T> при выборке объекта.", ex);
+                    Log.Warn("Ошибка управления очередью " +
+                        nameof(this.Enqueue) +
+                        " при выборке объекта " +
+                        nameof(result) + ".", 
+                        ex);
                 }
                 
                 cQueue.TryDequeue(out result);
@@ -111,7 +119,9 @@ namespace gSIP.Common
             }
             catch (Exception ex)
             {
-                Log.Warn("Ошибка при попытке остановки работы очереди DataQueue<T>.", ex);
+                Log.Warn("Ошибка при попытке остановки работы очереди " +
+                        nameof(this.Enqueue) + ".", 
+                        ex);
             }
         }
     }
