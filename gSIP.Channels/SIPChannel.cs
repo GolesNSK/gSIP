@@ -2,6 +2,7 @@
 using gSIP.Logger;
 using gSIP.Common;
 using System;
+using System.Threading;
 
 namespace gSIP.Channels
 {
@@ -39,6 +40,16 @@ namespace gSIP.Channels
         /// Очередь для данных предназначенных для отправки каналом.
         /// </summary>
         protected DataQueue<SIPRawData> sendQueeue = new DataQueue<SIPRawData>();
+
+        /// <summary>
+        /// Поток для приемника.
+        /// </summary>
+        protected Thread receiverThread;
+
+        /// <summary>
+        /// Поток для передатчика.
+        /// </summary>
+        protected Thread senderThread;
 
         /// <summary>
         /// Флаг отображающий состояние канала.
@@ -97,5 +108,87 @@ namespace gSIP.Channels
         /// Синхронный метод для добавления данных в очередь для отправки каналом.
         /// </summary>
         public abstract void Send();
+
+        /// <summary>
+        /// Запуск отдельного потока.
+        /// </summary>
+        /// <param name="thread">Поток.</param>
+        /// <param name="threadStart">Делегат.</param>
+        /// <param name="threadName">Наименование потока.</param>
+        /// <returns>Значение true, если поток запущен; в противном случае — значение false.</returns>
+        protected bool ThreadStart(Thread thread, ThreadStart threadStart, string threadName)
+        {
+            bool result = false;
+
+            if (thread != null && !thread.IsAlive)
+            {
+                try
+                {
+                    thread = new Thread(threadStart)
+                    {
+                        Name = threadName
+                    };
+                    thread.Start();
+
+                    Log.DebugFormat("Запущен поток {0}.", thread.Name);
+                    result = true;
+                }
+                catch (ThreadStartException ex)
+                {
+                    Log.Error("Сбой в управляемом потоке " +
+                        thread.Name + ", запуск не возможен.", ex);
+                }
+                catch (OutOfMemoryException ex)
+                {
+                    Log.Error("Недостаточно памяти для запуска потока " +
+                        thread.Name + ".", ex);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Ошибка запуска потока " +
+                        thread.Name + ".", ex);
+                }
+            }
+            else
+            {
+                Log.WarnFormat("Запустить поток {0} нельзя, т.к. уже выполняется поток {1}.", thread.Name, threadName);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Остановка потока.
+        /// </summary>
+        /// <param name="thread">Поток.</param>
+        protected void ThreadStop(Thread thread)
+        {
+            if (thread != null && thread.IsAlive)
+            {
+                try
+                {
+                    thread.Join(1000);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("Не удалось подключиться к потоку " + thread.Name + ".",
+                    ex);
+                }
+
+                try
+                {
+                    thread.Abort();
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug("Не удалось принудительно завершить поток " + thread.Name + ".",
+                    ex);
+                }
+            }
+            else
+            {
+                Log.DebugFormat("Завершить работу потока {0} нельзя, т.к. он не выполняется в данный момент.", thread.Name);
+            }
+        }
     }
 }

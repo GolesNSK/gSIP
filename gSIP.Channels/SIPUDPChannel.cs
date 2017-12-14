@@ -18,16 +18,6 @@ namespace gSIP.Channels
         private UdpClient udpClient = null;
 
         /// <summary>
-        /// Поток для UDP-приемника.
-        /// </summary>
-        private Thread receiverThread;
-
-        /// <summary>
-        /// Поток для UDP-передатчика.
-        /// </summary>
-        private Thread senderThread;
-
-        /// <summary>
         /// Конструктор класса SIPUDPChannel.
         /// </summary>
         /// <param name="localEndPoint">Локальная сетевая конечная точка.</param>
@@ -68,43 +58,35 @@ namespace gSIP.Channels
                 }
 
                 // Запуск UDP-приемника в отдельном потоке.
-                try
+                if (ThreadStart(receiverThread, new ThreadStart(Receiver),
+                    "UDPReceiver_" + LocalEndPoint.EndPoint.Address.ToString() + "_" + LocalEndPoint.EndPoint.Port.ToString()))
                 {
-                    receiverThread = new Thread(new ThreadStart(Receiver))
-                    {
-                        Name = "UDPReceiver_" + LocalEndPoint.EndPoint.Address.ToString() +
-                                          "_" + LocalEndPoint.EndPoint.Port.ToString()
-                    };
-                    receiverThread.Start();
-
-                    Log.DebugFormat("Приемник UDP {0} инициализирован.", receiverThread.Name);
+                    Log.InfoFormat("UDP приемник канала {0} с локальной конечной точкой {1} инициализирован.",
+                        Name,
+                        LocalEndPoint.ToString());
                 }
-                catch (Exception ex)
+                else
                 {
-                    Log.Error("Ошибка инициализации UDP приемника канала " + 
-                        Name + " с локальной конечной точкой " +
-                        LocalEndPoint.ToString() + ".", ex);
+                    Log.ErrorFormat("Ошибка инициализации UDP приемника канала {0} с локальной конечной точкой {1}.",
+                        Name,
+                        LocalEndPoint.ToString());
                     Stop();
                     return;
                 }
 
                 // Запуск UDP-передатчика в отдельном потоке.
-                try
+                if (ThreadStart(senderThread, new ThreadStart(Sender),
+                    "UDPSender_" + LocalEndPoint.EndPoint.Address.ToString() + "_" + LocalEndPoint.EndPoint.Port.ToString()))
                 {
-                    senderThread = new Thread(new ThreadStart(Sender))
-                    {
-                        Name = "UDPSender_" + LocalEndPoint.EndPoint.Address.ToString() +
-                                        "_" + LocalEndPoint.EndPoint.Port.ToString()
-                    };
-                    senderThread.Start();
-
-                    Log.InfoFormat("Передатчик UDP {0} инициализирован.", senderThread.Name);
+                    Log.InfoFormat("UDP передатчик канала {0} с локальной конечной точкой {1} инициализирован.",
+                        Name,
+                        LocalEndPoint.ToString());
                 }
-                catch (Exception ex)
+                else
                 {
-                    Log.Error("Ошибка инициализации UDP передатчика канала " + 
-                        Name + " с локальной конечной точкой " +
-                        LocalEndPoint.ToString() + ".", ex);
+                    Log.ErrorFormat("Ошибка инициализации UDP передатчика канала {0} с локальной конечной точкой {1}.",
+                        Name,
+                        LocalEndPoint.ToString());
                     Stop();
                     return;
                 }
@@ -144,7 +126,7 @@ namespace gSIP.Channels
                 else
                 {
                     Log.DebugFormat("UDP канал {0} с локальной конечной точкой {1} не может быть остановлен, " + 
-                        "т.к. он еще не инициализироан.",
+                        "т.к. он еще не инициализирован.",
                         Name,
                         LocalEndPoint.ToString());
                 }
@@ -161,61 +143,15 @@ namespace gSIP.Channels
                 }
 
                 // Завершение работы потоков приемника и передатчика.
-                if (receiverThread != null && receiverThread.IsAlive)
-                {
-                    try
-                    {
-                        receiverThread.Join(1000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn("Не удалось подключиться к потоку " + receiverThread.Name + ".",
-                        ex);
-                    }
+                ThreadStop(receiverThread);
+                Log.InfoFormat("UDP приемник канала {0} с локальной конечной точкой {1} остановлен.",
+                        Name,
+                        LocalEndPoint.ToString());
 
-                    try
-                    {
-                        receiverThread.Abort();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn("Не удалось принудительно завершить поток " + receiverThread.Name + ".",
-                        ex);
-                    }
-                    
-                }
-                else
-                {
-                    Log.DebugFormat("Поток {0} нельзя остановить, т.к. он еще не запущен.", receiverThread.Name);
-                }
-
-                if (senderThread != null && senderThread.IsAlive)
-                {
-                    try
-                    {
-                        senderThread.Join(1000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn("Не удалось подключиться к потоку " + senderThread.Name + ".",
-                        ex);
-                    }
-
-                    try
-                    {
-                        senderThread.Abort();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn("Не удалось принудительно завершить поток " + senderThread.Name + ".",
-                        ex);
-                    }
-                    
-                }
-                else
-                {
-                    Log.DebugFormat("Поток {0} нельзя остановить, т.к. он еще не запущен.", senderThread.Name);
-                }
+                ThreadStop(senderThread);
+                Log.InfoFormat("UDP передатчик канала {0} с локальной конечной точкой {1} остановлен.",
+                        Name,
+                        LocalEndPoint.ToString());
             }
             else
             {
