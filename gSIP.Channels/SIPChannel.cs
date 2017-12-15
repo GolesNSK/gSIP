@@ -102,12 +102,12 @@ namespace gSIP.Channels
         /// <summary>
         /// Синхронный метод для выборки полученных каналом данных из очереди.
         /// </summary>
-        public abstract void Receive();
+        public abstract SIPRawData Receive();
 
         /// <summary>
         /// Синхронный метод для добавления данных в очередь для отправки каналом.
         /// </summary>
-        public abstract void Send();
+        public abstract void Send(SIPRawData rawData);
 
         /// <summary>
         /// Запуск отдельного потока.
@@ -120,7 +120,11 @@ namespace gSIP.Channels
         {
             bool result = false;
 
-            if (thread != null && !thread.IsAlive)
+            if (thread != null && thread.IsAlive)
+            {
+                Log.WarnFormat("Запустить поток {0} нельзя, т.к. поток {1} еще выполняется.", threadName, thread.Name);
+            }
+            else
             {
                 try
                 {
@@ -149,11 +153,7 @@ namespace gSIP.Channels
                         thread.Name + ".", ex);
                 }
             }
-            else
-            {
-                Log.WarnFormat("Запустить поток {0} нельзя, т.к. уже выполняется поток {1}.", thread.Name, threadName);
-            }
-
+            
             return result;
         }
 
@@ -163,31 +163,50 @@ namespace gSIP.Channels
         /// <param name="thread">Поток.</param>
         protected void ThreadStop(Thread thread)
         {
-            if (thread != null && thread.IsAlive)
+            if (thread != null)
             {
-                try
+                if (thread.IsAlive)
                 {
-                    thread.Join(1000);
-                }
-                catch (Exception ex)
-                {
-                    Log.Debug("Не удалось подключиться к потоку " + thread.Name + ".",
-                    ex);
-                }
+                    // Ожидание завершения работы потока в течении 1 секунды.
+                    try
+                    {
+                        thread.Join(1000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug("Не удалось подключиться к потоку " + thread.Name + ".",
+                        ex);
+                    }
 
-                try
-                {
-                    thread.Abort();
+                    // Если работа потока все еще не завершена, то принудительное его завершение.
+                    if (thread.IsAlive)
+                    {
+                        Log.DebugFormat("Работа потока {0} будет завершена принудительно.", thread.Name);
+                        try
+                        {
+                            thread.Abort();
+                            Log.DebugFormat("Работа потока {0} завершена.", thread.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Debug("Не удалось принудительно завершить поток " + thread.Name + ".",
+                            ex);
+                        }
+                    }
+                    else
+                    {
+                        Log.DebugFormat("Работа потока {0} завершена.", thread.Name);
+                    }
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    Log.Debug("Не удалось принудительно завершить поток " + thread.Name + ".",
-                    ex);
+                    Log.DebugFormat("Завершение работы потока {0} невозможно, т.к. он не выполняется в данный момент.", thread.Name);
                 }
             }
             else
             {
-                Log.DebugFormat("Завершить работу потока {0} нельзя, т.к. он не выполняется в данный момент.", thread.Name);
+                Log.Debug("Завершение работы потока невозможно, т.к. он не был инициирован (thread == null).");
             }
         }
     }

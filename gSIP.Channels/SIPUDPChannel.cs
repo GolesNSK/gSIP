@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using gSIP.Common;
 
 namespace gSIP.Channels
 {
-    class SIPUDPChannel : SIPChannel
+    public class SIPUDPChannel : SIPChannel
     {
         /// <summary>
         /// Объект для предоставления сетевых служб по протоколу UDP.
@@ -166,36 +162,63 @@ namespace gSIP.Channels
         /// </summary>
         private void Receiver()
         {
-            Log.Debug("Приемник UDP начал работу в отдельном потоке.");
-            byte[] buffer = null;
-
-            while (!IsClosed)
+            try
             {
-                // Создание IPEndPoint для записи IP адреса и номера порта отправителя 
-                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                Log.DebugFormat("Приемник UDP канала {0} начал работу в отдельном потоке.", Name);
+                byte[] buffer = null;
 
-                try
+                while (!IsClosed)
                 {
-                    // Ожидание получения датаграмм UDP
-                    buffer = udpClient.Receive(ref remoteEndPoint);
-                }
-                catch (Exception ex)
-                {
-                    Log.ErrorFormat("Ошибка при получении данных UDP приемником.", ex);
-                }
+                    // Создание IPEndPoint для записи IP адреса и номера порта отправителя 
+                    IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                    buffer = null;
 
-                if (buffer == null || buffer.Length == 0)
-                {
-                    Log.WarnFormat("Приемник UDP получил 0 байт данных.");
+                    try
+                    {
+                        // Ожидание получения датаграмм UDP
+                        buffer = udpClient.Receive(ref remoteEndPoint);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        Log.Debug("Работа потока UDP приемника канала " + Name + " завершена принудительно.");
+                    }
+                    catch (SocketException ex)
+                    {
+                        Log.ErrorFormat("Ошибка UDP сокета приемника канала " + Name + ".", ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.ErrorFormat("Ошибка при получении данных UDP приемником канала " + Name + ".", ex);
+                    }
+
+                    if (buffer == null || buffer.Length == 0)
+                    {
+                        Log.DebugFormat("Приемник UDP канала {0} получил 0 байт данных от {1}.",
+                            Name,
+                            remoteEndPoint.ToString());
+                    }
+                    else
+                    {
+                        // Передача полученных данных в очередь для последующей обработки
+                        Log.DebugFormat("Приемник UDP канала {0} получил {1} байт данных от {2}.", 
+                            Name, 
+                            buffer.Length, 
+                            remoteEndPoint.ToString());
+
+                        receiveQueue.Enqueue(new SIPRawData(buffer, new SIPEndPoint(remoteEndPoint, ProtocolType), DateTime.Now));
+                    }
                 }
-                else
-                {
-                    // Передача полученных данных в очередь для последующей обработки
-                    Log.DebugFormat("Приемник UDP получил {0} байт данных от {1}.", buffer.Length, remoteEndPoint.ToString());
-                    receiveQueue.Enqueue(new SIPRawData(buffer, new SIPEndPoint(remoteEndPoint, ProtocolType), DateTime.Now));
-                }
+                Log.DebugFormat("Приемник UDP канала {0} завершил работу.", Name);
             }
-            Log.Debug("Приемник UDP завершил работу.");
+            catch (ThreadAbortException)
+            {
+                Log.Debug("Работа потока UDP приемника канала " + Name + " завершена принудительно.");
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Работа потока UDP приемника канала " + Name + " завершена аварийно.", ex);
+            }
+            
         }
 
         /// <summary>
@@ -203,39 +226,94 @@ namespace gSIP.Channels
         /// </summary>
         private void Sender()
         {
-            Log.Debug("Передатчик UDP начал работу в отдельном потоке.");
-
-            while (!IsClosed)
+            try
             {
-                sendQueeue.Dequeue(out SIPRawData rawData);
-                try
+                Log.DebugFormat("Передатчик UDP канала {0} начал работу в отдельном потоке.", Name);
+
+                while (!IsClosed)
                 {
-                    if (rawData.RemoteSIPEndPoint.Protocol != SIPProtocolType.Udp)
+                    sendQueeue.Dequeue(out SIPRawData rawData);
+                    try
                     {
-                        Log.WarnFormat("Неверно указан протокол для удаленной сетевой конечной точки, требуемое значение: ProtocolType.UDP.");
+                        if (ProtocolType.Equals(rawData.RemoteSIPEndPoint.Protocol))
+                        {
+                            udpClient.Send(rawData.Data, rawData.Data.Length, rawData.RemoteSIPEndPoint.EndPoint);
+
+                            Log.DebugFormat("Передатчик UDP канала {0} отправил {1} байт получателю {2}.",
+                                Name, 
+                                rawData.Data.Length,
+                                rawData.RemoteSIPEndPoint.EndPoint.ToString());
+                        }
+                        else
+                        {
+                            Log.WarnFormat("Отправка данных через канал {0} невозможна, неверно указан протокол - {1}, " +
+                                "для удаленной сетевой конечной точки, требуемое значение: ProtocolType.UDP.", 
+                                Name, 
+                                rawData.RemoteSIPEndPoint.Protocol);
+                        }
                     }
-                    udpClient.Send(rawData.Data, rawData.Data.Length, rawData.RemoteSIPEndPoint.EndPoint);
-                    Log.DebugFormat("Передатчик UDP отправил {0} байт получателю {1}.", rawData.Data.Length, rawData.RemoteSIPEndPoint.EndPoint.ToString());
+                    catch (ThreadAbortException)
+                    {
+                        Log.Debug("Работа потока UDP передатчика канала " + Name + " завершена принудительно.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Ошибка передачи UDP датаграммы " + rawData.Data.Length + 
+                            " байт получателю " + rawData.RemoteSIPEndPoint.EndPoint.ToString(), ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Log.Error("Ошибка передачи UDP датаграммы " + rawData.Data.Length + " байт получателю " + rawData.RemoteSIPEndPoint.EndPoint.ToString(), ex);
-                }
+
+                Log.DebugFormat("Передатчик UDP канала {0} завершил работу.", Name);
+            }
+            catch (ThreadAbortException)
+            {
+                Log.Debug("Работа потока UDP передатчика канала " + Name + " завершена принудительно.");
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Работа потока UDP передатчика канала " + Name + " завершена аварийно.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Выборка (синхронная) из очереди SIP сообщения полученного каналом.
+        /// </summary>
+        /// <returns>Возвращает объект содержащий необработанное SIP сообщение.</returns>
+        public override SIPRawData Receive()
+        {
+            if (!IsClosed)
+            {
+                receiveQueue.Dequeue(out SIPRawData rawData);
+                Log.DebugFormat("SIP сообщение объемом {0} получено из очереди полученных каналом {1} данных.", 
+                    rawData.Data.Length, 
+                    Name);
+                return rawData;
+            }
+            else
+            {
+                Log.WarnFormat("UDP канал {0} закрыт, получение данных невозможно.", Name);
             }
 
-            Log.Debug("Передатчик UDP завершил работу.");
+            return null;
         }
 
-        
-
-        public override void Receive()
+        /// <summary>
+        /// Помещение SIP сообщения в очередь для оправки UDP каналом.
+        /// </summary>
+        /// <param name="rawData"></param>
+        public override void Send(SIPRawData rawData)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Send()
-        {
-            throw new NotImplementedException();
+            if (!IsClosed)
+            {
+                sendQueeue.Enqueue(rawData);
+                Log.DebugFormat("SIP сообщение объемом {0} байт помещено в очередь для отправки каналом {1}.", 
+                    rawData.Data.Length, 
+                    Name);
+            }
+            else
+            {
+                Log.WarnFormat("UDP канал {0} закрыт, отправка данных невозможна.", Name);
+            }
         }
     }
 }

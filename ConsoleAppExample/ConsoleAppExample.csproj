@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +51,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gSIP.ChannelsTests\gSIP.ChannelsTests.csproj">
+      <Project>{784a4090-a267-403d-820f-501c5a70eadd}</Project>
+      <Name>gSIP.ChannelsTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gSIP.Channels\gSIP.Channels.csproj">
+      <Project>{e3da175a-0774-4ca9-a1a5-654bbcb69a31}</Project>
+      <Name>gSIP.Channels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gSIP.CommonTests\gSIP.CommonTests.csproj">
+      <Project>{76c24bba-d5ee-47ad-8f10-84ec95db55ef}</Project>
+      <Name>gSIP.CommonTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gSIP.Common\gSIP.Common.csproj">
+      <Project>{02b799af-fef9-463c-be5b-c8d152f86c7d}</Project>
+      <Name>gSIP.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gSIP.Logger\gSIP.Logger.csproj">
+      <Project>{a9ad4481-88d5-4c4d-8a82-dd187387dd3a}</Project>
+      <Name>gSIP.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gSIP.Message\gSIP.Message.csproj">
+      <Project>{4982d864-1ef3-4a85-9687-190a01ebf763}</Project>
+      <Name>gSIP.Message</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
