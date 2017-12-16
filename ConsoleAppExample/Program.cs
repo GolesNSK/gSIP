@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using gSIP.Channels;
@@ -20,29 +22,59 @@ namespace ConsoleAppExample
 
         static void Main(string[] args)
         {
-            SIPEndPoint EP01 = new SIPEndPoint(IPAddress.Parse("172.16.1.200"), 5065, SIPProtocolType.Udp);
-            SIPEndPoint EP02 = new SIPEndPoint(IPAddress.Parse("172.16.1.200"), 5066, SIPProtocolType.Udp);
-
+            // Запуск канала Channel01
+            SIPEndPoint EP01 = new SIPEndPoint(Network.GetIPv4Address(), 
+                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080), 
+                SIPProtocolType.Udp);
             SIPUDPChannel Channel01 = new SIPUDPChannel(EP01, "Channel01");
-            SIPUDPChannel Channel02 = new SIPUDPChannel(EP02, "Channel02");
+            Channel01.Start();
 
+            // Запуск канала Channel02
+            SIPEndPoint EP02 = new SIPEndPoint(Network.GetIPv4Address(), 
+                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080), 
+                SIPProtocolType.Udp);
+            SIPUDPChannel Channel02 = new SIPUDPChannel(EP02, "Channel02");
+            Channel02.Start();
+
+            // Подготовка пакетов данных
             SIPRawData rawData01 = new SIPRawData(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, EP02);
             SIPRawData rawData02 = new SIPRawData(new byte[] { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }, EP01);
 
-            Channel01.Start();
-            Channel02.Start();
-
             Thread.Sleep(1000);
-            Log.Fatal("#####################");
+            // Передача пакедов данных между каналами
+            Log.Info("----------------------------------------------------------------");
 
+            Channel01.Send(rawData01);
+            Channel01.Send(rawData01);
+            Channel01.Send(rawData01);
+            Channel01.Send(rawData01);
+            Thread.Sleep(50);
+            Channel02.Send(rawData02);
+            Channel02.Send(rawData02);
+            Channel02.Send(rawData02);
+            Channel02.Send(rawData02);
+            Thread.Sleep(50);
+            Channel01.Send(rawData01);
+            Channel02.Send(rawData02);
+            Channel01.Send(rawData01);
+            Channel02.Send(rawData02);
+            Channel01.Send(rawData01);
+            Channel02.Send(rawData02);
             Channel01.Send(rawData01);
             Channel02.Send(rawData02);
 
-            Log.Fatal("#####################");
+            Log.Info("----------------------------------------------------------------");
+            Console.WriteLine(Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080));
+
             Thread.Sleep(1000);
 
+            // Остановка каналов
             Channel01.Stop();
             Channel02.Stop();
+            
+
+            Console.WriteLine(Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080));
+
 
             //------------------------------------------------------
             Console.WriteLine("Работа приложения завершена, нажмите любую клавишу.");

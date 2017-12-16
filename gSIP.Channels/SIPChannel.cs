@@ -116,7 +116,7 @@ namespace gSIP.Channels
         /// <param name="threadStart">Делегат.</param>
         /// <param name="threadName">Наименование потока.</param>
         /// <returns>Значение true, если поток запущен; в противном случае — значение false.</returns>
-        protected bool ThreadStart(Thread thread, ThreadStart threadStart, string threadName)
+        protected bool ThreadStart(ref Thread thread, ThreadStart threadStart, string threadName)
         {
             bool result = false;
 
@@ -161,7 +161,7 @@ namespace gSIP.Channels
         /// Остановка потока.
         /// </summary>
         /// <param name="thread">Поток.</param>
-        protected void ThreadStop(Thread thread)
+        protected void ThreadStop(ref Thread thread)
         {
             if (thread != null)
             {

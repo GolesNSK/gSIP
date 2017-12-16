@@ -54,7 +54,7 @@ namespace gSIP.Channels
                 }
 
                 // Запуск UDP-приемника в отдельном потоке.
-                if (ThreadStart(receiverThread, new ThreadStart(Receiver),
+                if (ThreadStart(ref receiverThread, new ThreadStart(Receiver),
                     "UDPReceiver_" + LocalEndPoint.EndPoint.Address.ToString() + "_" + LocalEndPoint.EndPoint.Port.ToString()))
                 {
                     Log.InfoFormat("UDP приемник канала {0} с локальной конечной точкой {1} инициализирован.",
@@ -71,7 +71,7 @@ namespace gSIP.Channels
                 }
 
                 // Запуск UDP-передатчика в отдельном потоке.
-                if (ThreadStart(senderThread, new ThreadStart(Sender),
+                if (ThreadStart(ref senderThread, new ThreadStart(Sender),
                     "UDPSender_" + LocalEndPoint.EndPoint.Address.ToString() + "_" + LocalEndPoint.EndPoint.Port.ToString()))
                 {
                     Log.InfoFormat("UDP передатчик канала {0} с локальной конечной точкой {1} инициализирован.",
@@ -139,12 +139,12 @@ namespace gSIP.Channels
                 }
 
                 // Завершение работы потоков приемника и передатчика.
-                ThreadStop(receiverThread);
+                ThreadStop(ref receiverThread);
                 Log.InfoFormat("UDP приемник канала {0} с локальной конечной точкой {1} остановлен.",
                         Name,
                         LocalEndPoint.ToString());
 
-                ThreadStop(senderThread);
+                ThreadStop(ref senderThread);
                 Log.InfoFormat("UDP передатчик канала {0} с локальной конечной точкой {1} остановлен.",
                         Name,
                         LocalEndPoint.ToString());
