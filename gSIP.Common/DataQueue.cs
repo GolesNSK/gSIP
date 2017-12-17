@@ -91,6 +91,10 @@ namespace gSIP.Common
                 {
                     semaphore.Wait(cancellTokenSrc.Token);
                 }
+                catch (OperationCanceledException)
+                {
+                    Log.Debug("Операция выборки из очереди отменена.");
+                }
                 catch (Exception ex)
                 {
                     Log.Warn("Ошибка управления очередью " +

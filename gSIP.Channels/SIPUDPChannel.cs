@@ -181,14 +181,24 @@ namespace gSIP.Channels
                     catch (ThreadAbortException)
                     {
                         Log.Debug("Работа потока UDP приемника канала " + Name + " завершена принудительно.");
+                        continue;
                     }
                     catch (SocketException ex)
                     {
-                        Log.ErrorFormat("Ошибка UDP сокета приемника канала " + Name + ".", ex);
+                        if (ex.NativeErrorCode == 10004)
+                        {
+                            Log.DebugFormat("Работа сокета UDP канала {0} завершена.", Name);
+                        }
+                        else
+                        {
+                            Log.Error("Ошибка UDP сокета приемника канала " + Name + ".", ex);
+                        }
+                        continue;
                     }
                     catch (Exception ex)
                     {
-                        Log.ErrorFormat("Ошибка при получении данных UDP приемником канала " + Name + ".", ex);
+                        Log.Error("Ошибка при получении данных UDP приемником канала " + Name + ".", ex);
+                        continue;
                     }
 
                     if (buffer == null || buffer.Length == 0)
@@ -235,21 +245,28 @@ namespace gSIP.Channels
                     sendQueeue.Dequeue(out SIPRawData rawData);
                     try
                     {
-                        if (ProtocolType.Equals(rawData.RemoteSIPEndPoint.Protocol))
+                        if (rawData != null)
                         {
-                            udpClient.Send(rawData.Data, rawData.Data.Length, rawData.RemoteSIPEndPoint.EndPoint);
+                            if (ProtocolType.Equals(rawData.RemoteSIPEndPoint.Protocol))
+                            {
+                                udpClient.Send(rawData.Data, rawData.Data.Length, rawData.RemoteSIPEndPoint.EndPoint);
 
-                            Log.DebugFormat("Передатчик UDP канала {0} отправил {1} байт получателю {2}.",
-                                Name, 
-                                rawData.Data.Length,
-                                rawData.RemoteSIPEndPoint.EndPoint.ToString());
+                                Log.DebugFormat("Передатчик UDP канала {0} отправил {1} байт получателю {2}.",
+                                    Name,
+                                    rawData.Data.Length,
+                                    rawData.RemoteSIPEndPoint.EndPoint.ToString());
+                            }
+                            else
+                            {
+                                Log.WarnFormat("Отправка данных через канал {0} невозможна, неверно указан протокол - {1}, " +
+                                    "для удаленной сетевой конечной точки, требуемое значение: ProtocolType.UDP.",
+                                    Name,
+                                    rawData.RemoteSIPEndPoint.Protocol);
+                            }
                         }
                         else
                         {
-                            Log.WarnFormat("Отправка данных через канал {0} невозможна, неверно указан протокол - {1}, " +
-                                "для удаленной сетевой конечной точки, требуемое значение: ProtocolType.UDP.", 
-                                Name, 
-                                rawData.RemoteSIPEndPoint.Protocol);
+                            Log.DebugFormat("Передатчик UDP канала {0} получил из очереди отправки значение null.", Name);
                         }
                     }
                     catch (ThreadAbortException)
@@ -258,8 +275,16 @@ namespace gSIP.Channels
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Ошибка передачи UDP датаграммы " + rawData.Data.Length + 
+                        if (rawData != null)
+                        {
+                            Log.Error("Ошибка передачи UDP датаграммы " + rawData.Data.Length +
                             " байт получателю " + rawData.RemoteSIPEndPoint.EndPoint.ToString(), ex);
+                        }
+                        else
+                        {
+                            Log.Warn("Ошибка передачи UDP датаграммы в канале " + Name + ".", ex);
+                        }
+                        
                     }
                 }
 
@@ -284,9 +309,18 @@ namespace gSIP.Channels
             if (!IsClosed)
             {
                 receiveQueue.Dequeue(out SIPRawData rawData);
-                Log.DebugFormat("SIP сообщение объемом {0} получено из очереди полученных каналом {1} данных.", 
-                    rawData.Data.Length, 
+                if (rawData != null)
+                {
+                    Log.DebugFormat("SIP сообщение объемом {0} байт получено из очереди полученных каналом {1} данных.",
+                    rawData.Data.Length,
                     Name);
+                }
+                else
+                {
+                    Log.DebugFormat("Получен пустой пакет из очереди полученных каналом {0} данных.",
+                    Name);
+                }
+                
                 return rawData;
             }
             else
