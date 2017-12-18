@@ -56,6 +56,7 @@
     <Compile Include="Strings\SIPString.cs" />
     <Compile Include="Strings\SIPStringQuoted.cs" />
     <Compile Include="Strings\SIPStringToken.cs" />
+    <Compile Include="Strings\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gSIP.Logger\gSIP.Logger.csproj">
