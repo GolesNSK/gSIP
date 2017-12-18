@@ -44,7 +44,7 @@ namespace ConsoleAppExample
             SIPRawData rawData02 = new SIPRawData(new byte[] { 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }, EP01);
 
             Thread.Sleep(100);
-            // Передача пакедов данных между каналами
+            // Передача пакетов данных между каналами
             Log.Info("----------------------------------------------------------------");
 
             ThreadPool.QueueUserWorkItem((o) => {

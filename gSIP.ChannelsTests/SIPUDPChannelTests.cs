@@ -40,7 +40,7 @@ namespace gSIP.Channels.Tests
 
             Thread.Sleep(100);
 
-            // Передача пакедов данных между каналами:
+            // Передача пакетов данных между каналами:
             // из Channel01 в Channel02
             ThreadPool.QueueUserWorkItem((o) => {
                 for (int i = 0; i < count; i++)
@@ -62,7 +62,7 @@ namespace gSIP.Channels.Tests
                 Interlocked.Increment(ref status);
             });
 
-            // Обработка приятых пакетов каналом Channel01
+            // Обработка принятых пакетов каналом Channel01
             ThreadPool.QueueUserWorkItem((o) => {
                 SIPRawData receiveData;
                 byte n = 0;
@@ -79,7 +79,7 @@ namespace gSIP.Channels.Tests
                 } while (receiveData != null && receiveData.Data[0] < count - 1);
                 Interlocked.Increment(ref status);
             });
-            // Обработка приятых пакетов каналом Channel02
+            // Обработка принятых пакетов каналом Channel02
             ThreadPool.QueueUserWorkItem((o) => {
                 SIPRawData receiveData;
                 byte n = 0;
