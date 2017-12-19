@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using gSIP.Channels;
 using gSIP.Common;
+using gSIP.Common.Strings;
 using gSIP.Logger;
 using log4net;
 
@@ -22,19 +23,30 @@ namespace ConsoleAppExample
 
         static void Main(string[] args)
         {
+            string str = "To: <sip:74955438496@80.75.130.83;test=test>;\"test=test\"tag=mylnnqnrhui7dbuc.i";
+            int result = StringHelper.QuotedStringIndexOf(str, 0, '=');
+            Console.WriteLine(result);
+
+            //------------------------------------------------------
+            Console.WriteLine("Работа приложения завершена, нажмите любую клавишу.");
+            Console.ReadKey();
+        }
+
+        static void UDPChannelTest()
+        {
             int count = 10; // Количество пакетов в тесте.
             long status = 0;
 
             // Запуск канала Channel01
-            SIPEndPoint EP01 = new SIPEndPoint(Network.GetIPv4Address(), 
-                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080), 
+            SIPEndPoint EP01 = new SIPEndPoint(Network.GetIPv4Address(),
+                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080),
                 SIPProtocolType.Udp);
             SIPUDPChannel Channel01 = new SIPUDPChannel(EP01, "Channel01");
             Channel01.Start();
 
             // Запуск канала Channel02
-            SIPEndPoint EP02 = new SIPEndPoint(Network.GetIPv4Address(), 
-                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080), 
+            SIPEndPoint EP02 = new SIPEndPoint(Network.GetIPv4Address(),
+                Network.GetFreeUDPPort(Network.GetIPv4Address(), 5060, 5080),
                 SIPProtocolType.Udp);
             SIPUDPChannel Channel02 = new SIPUDPChannel(EP02, "Channel02");
             Channel02.Start();
@@ -120,9 +132,7 @@ namespace ConsoleAppExample
             Channel01.Stop();
             Channel02.Stop();
 
-            //------------------------------------------------------
-            Console.WriteLine("Работа приложения завершена, нажмите любую клавишу.");
-            Console.ReadKey();
+            
         }
 
     }
