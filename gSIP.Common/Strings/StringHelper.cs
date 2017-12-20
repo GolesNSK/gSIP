@@ -138,14 +138,101 @@ namespace gSIP.Common.Strings
             return index;
         }
 
-
-        public static List<string> SplitArrayToStringList(byte[] data)
+        /// <summary>
+        /// Разделение массива byte на строки (разделитель CRLF) содержащие .
+        /// </summary>
+        /// <param name="data">Массив byte[] содержащий символы в кодировке UTF8.</param>
+        /// <returns>Возвращает список строк.</returns>
+        public static List<string> SplitArrayToStringLines(byte[] data)
         {
+            const byte CR = 13;
+            const byte LF = 10;
+            const byte LAQUOT = 60;
+            const byte RAQUOT = 62;
+            const byte DQUOTE = 34;
+
+            LineIndexFieldState State = LineIndexFieldState.Start;
             List<string> StrList = new List<string>();
 
             if (data != null)
             {
-                throw new NotImplementedException();
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (State == LineIndexFieldState.Start
+                        || State == LineIndexFieldState.InField
+                        || State == LineIndexFieldState.RAQuote
+                        || State == LineIndexFieldState.EndQuote)
+                    {
+                        switch (data[i])
+                        {
+                            case LAQUOT:   // '<'
+                                State = LineIndexFieldState.LAQuote;
+                                break;
+                            case DQUOTE:   // '\"'
+                                State = LineIndexFieldState.StartQuote;
+                                break;
+                            default:
+                                if (data[i] == CR && i < data.Length - 1 && data[i] == LF)
+                                {
+                                    // Найден разделитель CRLF.
+                                    State = LineIndexFieldState.Delimiter;
+                                    i++;
+                                }
+                                else
+                                {
+                                    State = LineIndexFieldState.InField;
+                                }
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if (State == LineIndexFieldState.LAQuote)
+                    {
+                        switch (data[i])
+                        {
+                            case RAQUOT:  // '>'
+                                State = LineIndexFieldState.RAQuote;
+                                break;
+                            default:
+                                State = LineIndexFieldState.InAQuoteField;
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if (State == LineIndexFieldState.StartQuote)
+                    {
+                        switch (data[i])
+                        {
+                            case DQUOTE:   // '\"'
+                                State = LineIndexFieldState.EndQuote;
+                                break;
+                            default:
+                                State = LineIndexFieldState.InQuoteField;
+                                break;
+                        }
+                        continue;
+                    }
+
+                    if (State == LineIndexFieldState.InAQuoteField && data[i] == RAQUOT)
+                    {
+                        State = LineIndexFieldState.RAQuote;
+                        continue;
+                    }
+
+                    if (State == LineIndexFieldState.InQuoteField && data[i] == DQUOTE && data[i - 1] != 92)
+                    {
+                        State = LineIndexFieldState.EndQuote;
+                        continue;
+                    }
+
+                    if (State == LineIndexFieldState.Delimiter && data[i] == CR && i < data.Length - 1 && data[i] == LF)
+                    {
+                        // Найдено начало тела сообщения.
+                        break;
+                    }
+                }
             }
 
             return StrList;

@@ -10,6 +10,7 @@ using gSIP.Channels;
 using gSIP.Common;
 using gSIP.Common.Strings;
 using gSIP.Logger;
+using gSIP.Message;
 using log4net;
 
 namespace ConsoleAppExample
@@ -19,17 +20,47 @@ namespace ConsoleAppExample
         /// <summary>
         /// Логгер для ведения журнала событий приложения.
         /// </summary>
-        protected static ILog Log = AppLogger.GetLogger("LOGGER");
+        protected static ILog Log = AppLogger.DefaultLogger;
+
+        /// <summary>
+        /// Логгер для ведения журнала SIP-сообщений.
+        /// </summary>
+        protected static ILog SipLog = AppLogger.GetLogger("SIP");
 
         static void Main(string[] args)
         {
-            string str = "To: <sip:74955438496@80.75.130.83;test=test>;\"test=test\"tag=mylnnqnrhui7dbuc.i";
-            int result = StringHelper.QuotedStringIndexOf(str, 0, '=');
-            Console.WriteLine(result);
+            // Запуск канала Channel_02
+            SIPEndPoint localEndPoint = new SIPEndPoint(Network.GetIPv4Address(),
+                5060,
+                SIPProtocolType.Udp);
+            SIPUDPChannel Channel02 = new SIPUDPChannel(localEndPoint, "Channel_02");
+            Channel02.Start();
+
+            // Прием пакетов в отдельном потоке
+            ThreadPool.QueueUserWorkItem((o) => {
+                Log.Info("Начало обработки принятых пакетов каналом Channel02.");
+                SIPRawData receiveData;
+
+                do
+                {
+                    receiveData = Channel02.Receive();
+
+                    if (receiveData != null)
+                    {
+                        SIPMessageStrings sipMsgStr = SIPMessageStrings.ParseByteArray(receiveData.Data);
+                        SipLog.Info(sipMsgStr.ToString());
+                    }
+
+                } while (true);
+                //Log.Info("Конец обработки принятых пакетов каналом Channel02.");
+            });
 
             //------------------------------------------------------
             Console.WriteLine("Работа приложения завершена, нажмите любую клавишу.");
             Console.ReadKey();
+
+            // Остановка каналов
+            Channel02.Stop();
         }
 
         static void UDPChannelTest()

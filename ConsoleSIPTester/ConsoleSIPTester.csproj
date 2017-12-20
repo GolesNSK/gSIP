@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{14FEBA81-A602-4EA4-A077-1A02E62D0000}</ProjectGuid>
+    <ProjectGuid>{EAE987F7-8A12-4050-A178-6CD1D3E9447A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleAppExample</RootNamespace>
-    <AssemblyName>ConsoleAppExample</AssemblyName>
+    <RootNamespace>ConsoleSIPTester</RootNamespace>
+    <AssemblyName>ConsoleSIPTester</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -55,17 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\gSIP.ChannelsTests\gSIP.ChannelsTests.csproj">
-      <Project>{784a4090-a267-403d-820f-501c5a70eadd}</Project>
-      <Name>gSIP.ChannelsTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\gSIP.Channels\gSIP.Channels.csproj">
       <Project>{e3da175a-0774-4ca9-a1a5-654bbcb69a31}</Project>
       <Name>gSIP.Channels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\gSIP.CommonTests\gSIP.CommonTests.csproj">
-      <Project>{76c24bba-d5ee-47ad-8f10-84ec95db55ef}</Project>
-      <Name>gSIP.CommonTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\gSIP.Common\gSIP.Common.csproj">
       <Project>{02b799af-fef9-463c-be5b-c8d152f86c7d}</Project>
@@ -79,6 +71,15 @@
       <Project>{4982d864-1ef3-4a85-9687-190a01ebf763}</Project>
       <Name>gSIP.Message</Name>
     </ProjectReference>
+    <ProjectReference Include="..\gSIP.Transport\gSIP.Transport.csproj">
+      <Project>{1cf0b85c-074a-4c08-90c4-601babf7dfb9}</Project>
+      <Name>gSIP.Transport</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SIPTestMessages.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
