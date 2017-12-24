@@ -47,6 +47,7 @@
     <Compile Include="Chars\CharsSet.cs" />
     <Compile Include="Chars\CharsSetAllowed.cs" />
     <Compile Include="Chars\CharsSetDisallowed.cs" />
+    <Compile Include="Chars\CharsSetSingle.cs" />
     <Compile Include="DataQueue.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="Network.cs" />
