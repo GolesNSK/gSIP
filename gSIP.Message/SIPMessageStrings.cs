@@ -49,20 +49,58 @@ namespace gSIP.Message
             MessageBody = messageBody ?? throw new ArgumentNullException(nameof(messageBody));
         }
 
+        /// <summary>
+        /// Состояния конечного автомата.
+        /// </summary>
         private enum LineIndexFieldState
         {
-            Start = 0,          // Начальное состояние.
-            InField = 1,        // В строке.
-            LAQuote = 2,        // Левый уголок.
-            InAQuoteField = 3,  // В области ограниченной левым и правым уголками.
-            RAQuote = 4,        // Правый уголок.
-            StartQuote = 5,     // Первые, открывающие двойные кавычки.
-            InQuoteField = 6,   // В области ограниченной двойными кавычками.
-            EndQuote = 7,       // Вторые, закрывающие двойные кавычки.
-            Delimiter = 8,      // Разделитель.
-            Stop = 9,           // Завершение работы автомата
+            /// <summary>
+            /// Начальное состояние.
+            /// </summary>
+            Start = 0,
+            /// <summary>
+            /// В строке.
+            /// </summary>
+            InField = 1,
+            /// <summary>
+            /// Левый уголок.
+            /// </summary>
+            LAQuote = 2,
+            /// <summary>
+            /// В области ограниченной левым и правым уголками.
+            /// </summary>
+            InAQuoteField = 3,
+            /// <summary>
+            /// Правый уголок.
+            /// </summary>
+            RAQuote = 4,
+            /// <summary>
+            /// Первые, открывающие двойные кавычки.
+            /// </summary>
+            StartQuote = 5,
+            /// <summary>
+            /// В области ограниченной двойными кавычками.
+            /// </summary>
+            InQuoteField = 6,
+            /// <summary>
+            /// Вторые, закрывающие двойные кавычки.
+            /// </summary>
+            EndQuote = 7,
+            /// <summary>
+            /// Разделитель.
+            /// </summary>
+            Delimiter = 8,
+            /// <summary>
+            /// Завершение работы автомата.
+            /// </summary>
+            Stop = 9,
         }
 
+        /// <summary>
+        /// Анализ массива символов SIP-сообщения и формирование объекта со списком строк.
+        /// </summary>
+        /// <param name="data">Массив символов SIP-сообщения.</param>
+        /// <returns>Объект класса SIPMessageStrings содержащий SIP-сообщение разбитое на строки.</returns>
         public static SIPMessageStrings ParseByteArray(byte[] data)
         {
             SIPMessageStrings msgStrings= new SIPMessageStrings();
