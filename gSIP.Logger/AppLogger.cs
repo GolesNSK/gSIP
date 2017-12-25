@@ -41,33 +41,14 @@ namespace gSIP.Logger
             if (dl == null)
             {
                 // Загрузка конфигурации из файла App.config для инициализации библиотеки log4net
-                try
-                {
-                    XmlConfigurator.Configure(new System.IO.FileInfo(CONFIG_FILE));
-                }
-                catch (Exception ex)
-                {
-                    // Генерация исключения
-                    throw new Exception(String.Format("Ошибка загрузки конфигурации log4net: {0}",
-                                        ex.Message));
-                }
+                XmlConfigurator.Configure(new System.IO.FileInfo(CONFIG_FILE));
+
 
                 // Логгер по умолчанию
-                try
-                {
-                    dl = LogManager.GetLogger(DEFAULT_LOGER);
+                dl = LogManager.GetLogger(DEFAULT_LOGER);
                     dl.InfoFormat("Start application {0} v{1}",
-                        Assembly.GetExecutingAssembly().GetName().Name,
-                        Assembly.GetExecutingAssembly().GetName().Version.ToString());
-
-                }
-                catch (Exception ex)
-                {
-                    // Генерация исключения если не удалось инициировать логгер
-                    throw new Exception(String.Format("Ошибка инициализации log4net {0}: {1}",
-                                        DEFAULT_LOGER,
-                                        ex.Message));
-                }
+                    Assembly.GetExecutingAssembly().GetName().Name,
+                    Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
         }
 
