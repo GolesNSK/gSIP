@@ -47,6 +47,7 @@
     <Compile Include="Parsers\DFSMStateTransition.cs" />
     <Compile Include="Parsers\DFSMStateTransitionsTable.cs" />
     <Compile Include="Parsers\ParseSIPMessageFields.cs" />
+    <Compile Include="Parsers\ParseSIPStatusLine.cs" />
     <Compile Include="RequestLine.cs" />
     <Compile Include="SIPMessageStrings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

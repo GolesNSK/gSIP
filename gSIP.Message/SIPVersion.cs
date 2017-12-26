@@ -18,6 +18,11 @@ namespace gSIP.Message
         public int MinorVersion { get; private set; }
 
         /// <summary>
+        /// Статическое свойство отображающее поддерживаемую версию SIP протокола.
+        /// </summary>
+        public static SIPVersion SIPVersionSupported = new SIPVersion(2, 0);
+
+        /// <summary>
         /// Конструктор класса SIPVersion.
         /// </summary>
         /// <param name="majorVersion">Главный номер версии SIP-протокола.</param>

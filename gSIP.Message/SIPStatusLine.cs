@@ -21,14 +21,57 @@ namespace gSIP.Message
         public string ReasonPhrase { get; private set; }
 
         /// <summary>
-        /// Конструктор класса SIPStatusLine.
+        /// Конструктор класса SIPStatusLine, версия SIP-протокола по умолчанию 2.0.
         /// </summary>
-        /// <param name="sIPVersion">Версия SIP-протокола.</param>
+        /// <param name="statusCode">Код ответа.</param>
+        public SIPStatusLine(SIPStatusCode statusCode)
+        {
+            this.SIPVersion = SIPVersion.SIPVersionSupported;
+            StatusCode = statusCode.Index;
+            ReasonPhrase = statusCode.Value;
+        }
+
+        /// <summary>
+        /// Конструктор класса SIPStatusLine, версия SIP-протокола по умолчанию 2.0.
+        /// </summary>
         /// <param name="statusCode">Код ответа в диапазоне от 100 до 699.</param>
         /// <param name="reasonPhrase">Описание кода ответа.</param>
-        public SIPStatusLine(SIPVersion sIPVersion, int statusCode, string reasonPhrase)
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public SIPStatusLine(int statusCode, string reasonPhrase)
         {
-            SIPVersion = sIPVersion ?? throw new ArgumentNullException(nameof(sIPVersion), 
+            this.SIPVersion = SIPVersion.SIPVersionSupported;
+
+            if (statusCode >= 100 && statusCode <= 699)
+            {
+                StatusCode = statusCode;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(statusCode),
+                    "Код ответа SIP-протокола должен находится в диапазоне от 100 до 699.");
+            }
+
+            if (!string.IsNullOrEmpty(reasonPhrase))
+            {
+                ReasonPhrase = reasonPhrase;
+            }
+            else
+            {
+                ReasonPhrase = string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Конструктор класса SIPStatusLine.
+        /// </summary>
+        /// <param name="sipVersion">Версия SIP-протокола.</param>
+        /// <param name="statusCode">Код ответа в диапазоне от 100 до 699.</param>
+        /// <param name="reasonPhrase">Описание кода ответа.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public SIPStatusLine(SIPVersion sipVersion, int statusCode, string reasonPhrase)
+        {
+            SIPVersion = sipVersion ?? throw new ArgumentNullException(nameof(sipVersion), 
                                                  "Объект содержащий версию SIP-протокола не может быть null.");
 
             if (statusCode >= 100 && statusCode <= 699)

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using gSIP.Common.Chars;
 
 namespace gSIP.Message.Parsers
@@ -6,13 +10,23 @@ namespace gSIP.Message.Parsers
     /// <summary>
     /// Парсер для анализа массива байт содержащего SIP-сообщение.
     /// </summary>
-    public static class ParseSIPMessageFields
+    public static class ParseSIPStatusLine
     {
         #region Наборы символов.
         /// <summary>
-        /// Двойные кавычки.
+        /// Символ S.
         /// </summary>
-        private static CharsSetSingle DQUOTE = new CharsSetSingle('\"');
+        private static CharsSetSingle S = new CharsSetSingle('S');
+
+        /// <summary>
+        /// Символ I.
+        /// </summary>
+        private static CharsSetSingle I = new CharsSetSingle('I');
+
+        /// <summary>
+        /// Символ P.
+        /// </summary>
+        private static CharsSetSingle P = new CharsSetSingle('P');
 
         /// <summary>
         /// Символ возврата каретки.
@@ -25,25 +39,32 @@ namespace gSIP.Message.Parsers
         private static CharsSetSingle LF = new CharsSetSingle('\n');
 
         /// <summary>
-        /// Обратный слэш.
+        /// Символ слэш.
         /// </summary>
-        private static CharsSetSingle BSLASH = new CharsSetSingle('\\');
+        private static CharsSetSingle SLASH = new CharsSetSingle('/');
 
         /// <summary>
-        /// Любой символ, кроме DQUOTE, CR и LF.
+        /// Символ точка.
         /// </summary>
-        private static CharsSetDisallowed CharSetLim1 = 
-            new CharsSetDisallowed( DQUOTE.Chars, CR.Chars, LF.Chars );
+        private static CharsSetSingle DOT = new CharsSetSingle('.');
+
+        /// <summary>
+        /// Символ точка.
+        /// </summary>
+        private static CharsSetSingle SP = new CharsSetSingle(' ');
+
+        /// <summary>
+        /// Цифровые символы.
+        /// </summary>
+        private static CharsSetAllowed DIGIT =
+            new CharsSetAllowed(new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
 
         /// <summary>
         /// Любой символ, кроме DQUOTE, CR, LF и BSLASH.
         /// </summary>
-        private static CharsSetDisallowed CharSetLim2 =
-            new CharsSetDisallowed(DQUOTE.Chars, CR.Chars, LF.Chars, BSLASH.Chars);
+        //private static CharsSetDisallowed CharSetLim2 =
+        //    new CharsSetDisallowed(DQUOTE.Chars, CR.Chars, LF.Chars, BSLASH.Chars);
 
-        /// <summary>
-        /// Любой символ.
-        /// </summary>
         private static CharsSetAny CharAny = new CharsSetAny();
         #endregion
 
@@ -76,7 +97,7 @@ namespace gSIP.Message.Parsers
         /// <summary>
         /// Инициализация статического класса ParseSIPMessageFields.
         /// </summary>
-        static ParseSIPMessageFields()
+        static ParseSIPStatusLine()
         {
             TransitionsTable.AddStateTransition(Start, StartLine, CharSetLim1);
             TransitionsTable.AddStateTransition(StartLine, StartLine, CharSetLim1);
