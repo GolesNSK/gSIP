@@ -13,7 +13,7 @@ namespace gSIP.Common.Chars
         /// </summary>
         /// <param name="name">Наименование набора символов.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        protected CharacterGroupPositive(string name) : base(name)
+        public CharacterGroupPositive(string name) : base(name)
         {
         }
 

@@ -40,7 +40,15 @@ namespace gSIP.Common.Chars
         /// <exception cref="ArgumentNullException"></exception>
         protected CharacterGroup(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name), "Не задано имя набора символов.");
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                Name = name;
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(name), "Не задано имя набора символов CharacterGroup.");
+            }
+
             Chars = null;
             CharsRanges = null;
         }
@@ -102,7 +110,8 @@ namespace gSIP.Common.Chars
                             CharsRanges[i, 1] = lastCharacter;
                             return;
                         }
-                        else if ( lastCharacter >= CharsRanges[i, 0]
+
+                        if ( lastCharacter >= CharsRanges[i, 0]
                             && lastCharacter <= CharsRanges[i, 1]
                             && firstCharacter < CharsRanges[i, 0] )
                         {
@@ -167,7 +176,7 @@ namespace gSIP.Common.Chars
         /// <returns>Строка, представляющая текущий объект.</returns>
         public override string ToString()
         {
-            return string.Format("набор символов \"{0}\"", Name);
+            return Name;
         }
 
         /// <summary>
