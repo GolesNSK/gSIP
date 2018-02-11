@@ -96,12 +96,7 @@ namespace gSIP.Common.Chars
         /// <returns>Возвращает true, если символ находится в диапазоне, иначе false.</returns>
         public bool IsCharInRange(char ch)
         {
-            if (ch >= Start && ch <= End)
-            {
-                return true;
-            }
-
-            return false;
+            return ch >= Start && ch <= End;
         }
 
         /// <summary>
