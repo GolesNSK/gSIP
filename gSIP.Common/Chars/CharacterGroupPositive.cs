@@ -26,17 +26,17 @@ namespace gSIP.Common.Chars
         {
             bool result = false;
 
-            if (CharsRanges != null && CharsRanges.GetUpperBound(0) >= 0)
-            {
-                for (int i = 0; i <= CharsRanges.GetUpperBound(0); i++)
-                {
-                    if (ch >= CharsRanges[i, 0] && ch <= CharsRanges[i, 1])
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
+            //if (CharsRanges != null && CharsRanges.GetUpperBound(0) >= 0)
+            //{
+            //    for (int i = 0; i <= CharsRanges.GetUpperBound(0); i++)
+            //    {
+            //        if (ch >= CharsRanges[i, 0] && ch <= CharsRanges[i, 1])
+            //        {
+            //            result = true;
+            //            break;
+            //        }
+            //    }
+            //}
 
             if (!result && Chars != null && Chars.Length > 0)
             {

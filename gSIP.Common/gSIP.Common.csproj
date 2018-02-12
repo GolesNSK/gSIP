@@ -50,7 +50,6 @@
     <Compile Include="Chars\CharacterGroupPositive.cs" />
     <Compile Include="Chars\CharacterGroupSingle.cs" />
     <Compile Include="Chars\CharacterRange.cs" />
-    <Compile Include="Chars\CharacterRangesSet.cs" />
     <Compile Include="Chars\CharsSet.cs" />
     <Compile Include="Chars\CharsSetAllowed.cs" />
     <Compile Include="Chars\CharsSetAny.cs" />

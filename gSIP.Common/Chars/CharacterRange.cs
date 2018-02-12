@@ -5,7 +5,7 @@ namespace gSIP.Common.Chars
     /// <summary>
     /// Класс для хранения диапазона символов char.
     /// </summary>
-    public class CharacterRange
+    public class CharacterRange : IComparable<CharacterRange>
     {
         /// <summary>
         /// Начало диапазона.
@@ -108,6 +108,22 @@ namespace gSIP.Common.Chars
             return string.Format("[{0}-{1}]", 
                 Start.ToString(), 
                 End.ToString());
+        }
+
+        /// <summary>
+        /// Сравнивает текущий экземпляр с другим объектом того же типа и возвращает целое число, 
+        /// которое показывает, расположен ли текущий экземпляр перед, после или на той же позиции 
+        /// в порядке сортировки, что и другой объект.
+        /// </summary>
+        /// <param name="other">Объект для сравнения.</param>
+        /// <returns>Меньше нуля - текущий экземпляр будет находиться перед объектом, переданным как
+        /// параметр в метод CompareTo в результате сортировки;
+        /// ноль - последовательность объектов текущего и переданного как параметр в метод CompareTo не изменится;
+        /// больше нуля - текущий объект будет находиться после объекта переданного как параметр в метод CompareTo в 
+        /// отсортированном списке.</returns>
+        public int CompareTo(CharacterRange other)
+        {
+            return ((int)Start + (int)End - (int)other.Start - (int)other.End) / 2;
         }
     }
 }
