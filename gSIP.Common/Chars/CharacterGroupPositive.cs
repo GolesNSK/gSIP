@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gSIP.Common.Chars
 {
+    /// <summary>
+    /// Класс представляющий позитивный набор символов (разрешены только заданные в наборе символы).
+    /// </summary>
     public class CharacterGroupPositive : CharacterGroup
     {
         /// <summary>
@@ -24,35 +23,44 @@ namespace gSIP.Common.Chars
         /// <returns>Значение true, если символ разрешен; в противном случае — значение false.</returns>
         public override bool IsCharAllowed(char ch)
         {
-            bool result = false;
-
-            //if (CharsRanges != null && CharsRanges.GetUpperBound(0) >= 0)
-            //{
-            //    for (int i = 0; i <= CharsRanges.GetUpperBound(0); i++)
-            //    {
-            //        if (ch >= CharsRanges[i, 0] && ch <= CharsRanges[i, 1])
-            //        {
-            //            result = true;
-            //            break;
-            //        }
-            //    }
-            //}
-
-            if (!result && Chars != null && Chars.Length > 0)
+            if (CharsRanges != null)
             {
-                for (int i = 0; i < Chars.Length; i++)
+                foreach (CharacterRange cr in CharsRanges)
                 {
-                    if (ch.Equals(Chars[i]))
+                    if (cr.IsCharInRange(ch))
                     {
-                        result = true;
-                        break;
+                        return true;
                     }
                 }
             }
 
-            return result;
+            if (Chars != null)
+            {
+                int left = 0;
+                int right = Chars.Length;
+                int mid;
+
+                while (!(left >= right))
+                {
+                    mid = left + (right - left) / 2;
+
+                    if (Chars[mid] == ch)
+                    {
+                        return true;
+                    }
+
+                    if (Chars[mid] > ch)
+                    {
+                        right = mid;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+            }
+
+            return false;
         }
-
-
     }
 }
