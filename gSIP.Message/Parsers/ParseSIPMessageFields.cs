@@ -78,27 +78,27 @@ namespace gSIP.Message.Parsers
         /// </summary>
         static ParseSIPMessageFields()
         {
-            TransitionsTable.AddStateTransition(Start, StartLine, CharSetLim1);
-            TransitionsTable.AddStateTransition(StartLine, StartLine, CharSetLim1);
-            TransitionsTable.AddStateTransition(StartLine, StartLineCR, CR);
-            TransitionsTable.AddStateTransition(StartLineCR, StartLineEnd, LF);
-            TransitionsTable.AddStateTransition(StartLineEnd, Header, CharSetLim1);
-            TransitionsTable.AddStateTransition(Header, Header, CharSetLim1);
-            TransitionsTable.AddStateTransition(Header, HeaderQString, DQUOTE);
-            TransitionsTable.AddStateTransition(Header, HeaderCR, CR);
-            TransitionsTable.AddStateTransition(HeaderQString, HeaderQString, CharSetLim2);
-            TransitionsTable.AddStateTransition(HeaderQString, Header, DQUOTE);
-            TransitionsTable.AddStateTransition(HeaderQString, HQSBackSlash, BSLASH);
-            TransitionsTable.AddStateTransition(HQSBackSlash, HQSQuotedPair, CharAny);
-            TransitionsTable.AddStateTransition(HQSQuotedPair, HQSBackSlash, BSLASH);
-            TransitionsTable.AddStateTransition(HQSQuotedPair, HeaderQString, CharSetLim2);
-            TransitionsTable.AddStateTransition(HQSQuotedPair, Header, DQUOTE);
-            TransitionsTable.AddStateTransition(HeaderCR, HeaderEnd, LF);
-            TransitionsTable.AddStateTransition(HeaderEnd, Header, CharSetLim1);
-            TransitionsTable.AddStateTransition(HeaderEnd, HeadersCR, CR);
-            TransitionsTable.AddStateTransition(HeadersCR, HeadersEnd, LF);
-            TransitionsTable.AddStateTransition(HeadersEnd, MessageBody, CharAny);
-            TransitionsTable.AddStateTransition(MessageBody, MessageBody, CharAny);
+            //TransitionsTable.AddStateTransition(Start, StartLine, CharSetLim1);
+            //TransitionsTable.AddStateTransition(StartLine, StartLine, CharSetLim1);
+            //TransitionsTable.AddStateTransition(StartLine, StartLineCR, CR);
+            //TransitionsTable.AddStateTransition(StartLineCR, StartLineEnd, LF);
+            //TransitionsTable.AddStateTransition(StartLineEnd, Header, CharSetLim1);
+            //TransitionsTable.AddStateTransition(Header, Header, CharSetLim1);
+            //TransitionsTable.AddStateTransition(Header, HeaderQString, DQUOTE);
+            //TransitionsTable.AddStateTransition(Header, HeaderCR, CR);
+            //TransitionsTable.AddStateTransition(HeaderQString, HeaderQString, CharSetLim2);
+            //TransitionsTable.AddStateTransition(HeaderQString, Header, DQUOTE);
+            //TransitionsTable.AddStateTransition(HeaderQString, HQSBackSlash, BSLASH);
+            //TransitionsTable.AddStateTransition(HQSBackSlash, HQSQuotedPair, CharAny);
+            //TransitionsTable.AddStateTransition(HQSQuotedPair, HQSBackSlash, BSLASH);
+            //TransitionsTable.AddStateTransition(HQSQuotedPair, HeaderQString, CharSetLim2);
+            //TransitionsTable.AddStateTransition(HQSQuotedPair, Header, DQUOTE);
+            //TransitionsTable.AddStateTransition(HeaderCR, HeaderEnd, LF);
+            //TransitionsTable.AddStateTransition(HeaderEnd, Header, CharSetLim1);
+            //TransitionsTable.AddStateTransition(HeaderEnd, HeadersCR, CR);
+            //TransitionsTable.AddStateTransition(HeadersCR, HeadersEnd, LF);
+            //TransitionsTable.AddStateTransition(HeadersEnd, MessageBody, CharAny);
+            //TransitionsTable.AddStateTransition(MessageBody, MessageBody, CharAny);
         }
 
         public static bool Parser(byte[] data)

@@ -25,17 +25,17 @@ namespace gSIP.Message.Parsers
         /// <summary>
         /// Алфавит для входящего символа.
         /// </summary>
-        public CharsSet ChareSet { get; private set; }
+        public CharacterGroup CharsGroup { get; private set; }
 
         /// <summary>
         /// Конструктор класса DFSMStateTransition.
         /// </summary>
         /// <param name="currentState">Текущее состояние ДКА (значение должно быть больше или равно 0).</param>
         /// <param name="nextState">Следующее состояние ДКА (значение должно быть больше или равно 0).</param>
-        /// <param name="chareSet">Алфавит для входящего символа (не может быть null).</param>
+        /// <param name="charsGroup">Алфавит для входящего символа (не может быть null).</param>
         /// <exception cref="ArgumentNullException">chareSet не может быть null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Значения currentState и nextState должны быть больше или рано 0.</exception>
-        public DFSMStateTransition(int currentState, int nextState, CharsSet chareSet)
+        public DFSMStateTransition(int currentState, int nextState, CharacterGroup charsGroup)
         {
             if (currentState >= 0)
             {
@@ -43,7 +43,7 @@ namespace gSIP.Message.Parsers
             }
             else
             {
-                throw new ArgumentOutOfRangeException(nameof(chareSet), "Значение currentState должно быть больше или равно 0.");
+                throw new ArgumentOutOfRangeException(nameof(charsGroup), "Значение currentState должно быть больше или равно 0.");
             }
 
             if (nextState >= 0)
@@ -55,7 +55,7 @@ namespace gSIP.Message.Parsers
                 throw new ArgumentOutOfRangeException(nameof(nextState), "Значение nextState должно быть больше или равно 0.");
             }
 
-            ChareSet = chareSet ?? throw new ArgumentNullException(nameof(chareSet), "chareSet не может быть null.");
+            CharsGroup = charsGroup ?? throw new ArgumentNullException(nameof(charsGroup), "chareSet не может быть null.");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace gSIP.Message.Parsers
             return other != null &&
                    CurrentState == other.CurrentState &&
                    NextState == other.NextState &&
-                   ChareSet == other.ChareSet;
+                   CharsGroup == other.CharsGroup;
         }
         
     }

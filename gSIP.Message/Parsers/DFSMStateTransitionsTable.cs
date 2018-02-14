@@ -27,13 +27,13 @@ namespace gSIP.Message.Parsers
         /// </summary>
         /// <param name="currentState">Текущее состояние ДКА.</param>
         /// <param name="nextState">Следующее состояние ДКА.</param>
-        /// <param name="charsSet">Алфавит для входящего символа.</param>
+        /// <param name="charsGroup">Алфавит для входящего символа.</param>
         /// <exception cref="ArgumentNullException">chareSet не может быть null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Значения currentState и nextState должны быть больше или рано 0.</exception>
         /// <exception cref="ArgumentException">Добавляемый переход ДКА уже существует.</exception>
-        public void AddStateTransition(int currentState, int nextState, CharsSet charsSet)
+        public void AddStateTransition(int currentState, int nextState, CharacterGroup charsGroup)
         {
-            DFSMStateTransition stateTransition = new DFSMStateTransition(currentState, nextState, charsSet);
+            DFSMStateTransition stateTransition = new DFSMStateTransition(currentState, nextState, charsGroup);
 
             if (!StateTransitionAlreadyDefined(stateTransition))
             {
@@ -53,7 +53,7 @@ namespace gSIP.Message.Parsers
         private bool StateTransitionAlreadyDefined(DFSMStateTransition stateTransitions)
         {
             return this.Any(t => t.CurrentState == stateTransitions.CurrentState 
-                                 && t.ChareSet == stateTransitions.ChareSet);
+                                 && t.CharsGroup == stateTransitions.CharsGroup);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace gSIP.Message.Parsers
         {
             if (LastStateTransition != null 
                 && LastStateTransition.CurrentState == currentState 
-                && LastStateTransition.ChareSet.IsCharAllowed(ch))
+                && LastStateTransition.CharsGroup.IsCharAllowed(ch))
             {
                 return LastStateTransition.NextState;
             }
@@ -74,7 +74,7 @@ namespace gSIP.Message.Parsers
             foreach (DFSMStateTransition stateTransition in this)
             {
                 if (stateTransition.CurrentState == currentState 
-                    && stateTransition.ChareSet.IsCharAllowed(ch))
+                    && stateTransition.CharsGroup.IsCharAllowed(ch))
                 {
                     LastStateTransition = stateTransition;
                     return stateTransition.NextState;

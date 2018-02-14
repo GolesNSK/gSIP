@@ -27,6 +27,38 @@ namespace gSIP.Common.Chars
         protected CharacterRange[] CharsRanges;
 
         /// <summary>
+        /// Получение копии массива символов.
+        /// </summary>
+        /// <returns>Возвращает заданный массив символов или null.</returns>
+        public char[] GetChars()
+        {
+            if (Chars != null)
+            {
+                return (char[])Chars.Clone();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Получить копию массива диапазонов символов.
+        /// </summary>
+        /// <returns>Возвращает заданный массив диапазонов символов или null.</returns>
+        public CharacterRange[] GetCharsRanges()
+        {
+            if (CharsRanges != null)
+            {
+                return (CharacterRange[])CharsRanges.Clone();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Показывает, относится ли указанный символ к разрешенным в рамках данного набора.
         /// </summary>
         /// <param name="ch">Проверяемый символ.</param>
@@ -169,6 +201,47 @@ namespace gSIP.Common.Chars
             newCharsRanges.Sort();
 
             CharsRanges = newCharsRanges.ToArray();
+        }
+
+        /// <summary>
+        /// Добавление диапазона символов.
+        /// </summary>
+        /// <param name="charRange">Добавляемый диапазон символов.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void AddCharsRange(CharacterRange charRange)
+        {
+            if (charRange != null)
+            {
+                AddCharsRange(charRange.Start, charRange.End);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(charRange), "Должен символов не может быть null.");
+            }
+        }
+
+        /// <summary>
+        /// Добавление символов и диапазонов символов из объекта дочернего класса CharacterGroup.
+        /// </summary>
+        /// <param name="charGroup">Объект дочернего класса CharacterGroup.</param>
+        public void AddCharacterGroup(CharacterGroup charGroup)
+        {
+            CharacterRange[] addedCR = charGroup.GetCharsRanges();
+
+            if (addedCR != null)
+            {
+                for (int i = 0; i < addedCR.Length; i++)
+                {
+                    AddCharsRange(addedCR[i]);
+                }
+            }
+
+            char[] addedCh = charGroup.GetChars();
+
+            if (addedCh != null)
+            {
+                AddChars(addedCh);
+            }
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace gSIP.Common.Chars
     /// <summary>
     /// Класс для хранения диапазона символов char.
     /// </summary>
-    public class CharacterRange : IComparable<CharacterRange>
+    public class CharacterRange : IComparable<CharacterRange>, ICloneable
     {
         /// <summary>
         /// Начало диапазона.
@@ -124,6 +124,15 @@ namespace gSIP.Common.Chars
         public int CompareTo(CharacterRange other)
         {
             return ((int)Start + (int)End - (int)other.Start - (int)other.End) / 2;
+        }
+
+        /// <summary>
+        /// Получить копию экземпляра объекта CharacterRange.
+        /// </summary>
+        /// <returns>Возвращает копию экземпляра объекта CharacterRange.</returns>
+        public object Clone()
+        {
+            return new CharacterRange(Start, End);
         }
     }
 }
