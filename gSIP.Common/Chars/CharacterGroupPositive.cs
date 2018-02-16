@@ -23,44 +23,7 @@ namespace gSIP.Common.Chars
         /// <returns>Значение true, если символ разрешен; в противном случае — значение false.</returns>
         public override bool IsCharAllowed(char ch)
         {
-            if (CharsRanges != null)
-            {
-                foreach (CharacterRange cr in CharsRanges)
-                {
-                    if (cr.IsCharInRange(ch))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            if (Chars != null)
-            {
-                int left = 0;
-                int right = Chars.Length;
-                int mid;
-
-                while (!(left >= right))
-                {
-                    mid = left + (right - left) / 2;
-
-                    if (Chars[mid] == ch)
-                    {
-                        return true;
-                    }
-
-                    if (Chars[mid] > ch)
-                    {
-                        right = mid;
-                    }
-                    else
-                    {
-                        left = mid + 1;
-                    }
-                }
-            }
-
-            return false;
+            return IsCharInCharsRanges(ch) || IsCharInChars(ch);
         }
     }
 }

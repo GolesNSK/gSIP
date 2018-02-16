@@ -8,9 +8,9 @@ namespace gSIP.Common.Chars.Tests
         [TestMethod()]
         public void CharacterGroupSingleTest()
         {
-            CharacterGroupSingle cgs = new CharacterGroupSingle("TEST", 'b');
+            CharacterGroupSingle cgs = new CharacterGroupSingle('b');
 
-            Assert.AreEqual("TEST:[b]", cgs.ToString(), "Тест 01");
+            Assert.AreEqual("b:[b]", cgs.ToString(), "Тест 01");
             Assert.IsTrue(cgs.IsCharAllowed('b'), "Тест 02");
             Assert.IsFalse(cgs.IsCharAllowed('a'), "Тест 03");
             Assert.IsFalse(cgs.IsCharAllowed('c'), "Тест 04");

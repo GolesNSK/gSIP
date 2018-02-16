@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace gSIP.Common.Chars
 {
@@ -107,7 +105,7 @@ namespace gSIP.Common.Chars
 
                 for (int i = 0; i < chars.Length; i++)
                 {
-                    if (!newCharsList.Exists(ch => ch == chars[i]))
+                    if (!newCharsList.Exists(ch => ch == chars[i]) && !IsCharInCharsRanges(chars[i]))
                     {
                         newCharsList.Add(chars[i]);
                     }
@@ -121,6 +119,87 @@ namespace gSIP.Common.Chars
             {
                 throw new ArgumentOutOfRangeException(nameof(chars), "Массив с символами не инициализирован или пуст.");
             }
+        }
+
+
+        /// <summary>
+        /// Удаление символов из массива Chars которые пересекаются с заданными диапазонами символов.
+        /// </summary>
+        protected void RemoveRedundantChars()
+        {
+            if (Chars != null && Chars.Length > 0)
+            {
+                List<char> newCharsList;
+                newCharsList = new List<char>(Chars);
+
+                for (int i = 0; i < Chars.Length; i++)
+                {
+                    if (!newCharsList.Exists(ch => ch == Chars[i]) && !IsCharInCharsRanges(Chars[i]))
+                    {
+                        newCharsList.Add(Chars[i]);
+                    }
+                }
+
+                newCharsList.Sort();
+                Chars = newCharsList.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Проверка, попадает ли символ в заданные диапазоны символов.
+        /// </summary>
+        /// <param name="ch">Проверяемый символ.</param>
+        /// <returns>Возвращает true, если символ лежит в заданных диапазонах символов, иначе - false.</returns>
+        protected bool IsCharInCharsRanges(char ch)
+        {
+            if (CharsRanges != null)
+            {
+                foreach (CharacterRange cr in CharsRanges)
+                {
+                    if (cr.IsCharInRange(ch))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Проверка, попадает ли символ в заданный массив символов.
+        /// </summary>
+        /// <param name="ch">Проверяемый символ.</param>
+        /// <returns>Возвращает true, если символ есть в заданном массиве символов, иначе - false.</returns>
+        protected bool IsCharInChars(char ch)
+        {
+            if (Chars != null)
+            {
+                int left = 0;
+                int right = Chars.Length;
+                int mid;
+
+                while (!(left >= right))
+                {
+                    mid = left + (right - left) / 2;
+
+                    if (Chars[mid] == ch)
+                    {
+                        return true;
+                    }
+
+                    if (Chars[mid] > ch)
+                    {
+                        right = mid;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -199,8 +278,9 @@ namespace gSIP.Common.Chars
             }
 
             newCharsRanges.Sort();
-
             CharsRanges = newCharsRanges.ToArray();
+
+            RemoveRedundantChars();
         }
 
         /// <summary>
@@ -242,6 +322,8 @@ namespace gSIP.Common.Chars
             {
                 AddChars(addedCh);
             }
+
+            RemoveRedundantChars();
         }
 
         /// <summary>
@@ -266,7 +348,7 @@ namespace gSIP.Common.Chars
 
             return sb.ToString();
         }
-
+        
         /// <summary>
         /// Возвращает строковое представление текущего объекта.
         /// </summary>

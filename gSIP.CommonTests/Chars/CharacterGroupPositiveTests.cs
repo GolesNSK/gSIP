@@ -20,6 +20,7 @@ namespace gSIP.Common.Chars.Tests
             cgp.AddCharsRange('D', 'F');
             cgp.AddCharsRange('C', 'E');
             cgp.AddCharsRange('A', 'D');
+            cgp.AddChars(new char[] { 'x', 'D', 'F', 'y', 'x', 'E', '+' });
 
             Assert.AreEqual("TEST:[+124568HK_abe][A-F][t-z]", cgp.ToString(), "Тест 01");
             Assert.IsTrue(cgp.IsCharAllowed('a'), "Тест 02");
@@ -49,6 +50,22 @@ namespace gSIP.Common.Chars.Tests
             Assert.IsFalse(cgp.IsCharAllowed('r'), "Тест 27");
             Assert.IsFalse(cgp.IsCharAllowed('s'), "Тест 28");
             Assert.IsFalse(cgp.IsCharAllowed('{'), "Тест 29");
+
+            CharacterGroupPositive cgp2 = new CharacterGroupPositive("TEST2");
+            cgp2.AddChars(new char[] { '9', '0', '3', '7', '2' });
+            cgp2.AddCharsRange(new CharacterRange('D', 'K'));
+            cgp2.AddCharsRange(new CharacterRange('O', 'R'));
+            cgp2.AddCharacterGroup(cgp);
+            Assert.AreEqual("TEST2:[+0123456789_abe][A-K][O-R][t-z]", cgp2.ToString(), "Тест 30");
+
+            CharacterGroupPositive cgp3 = new CharacterGroupPositive("TEST3");
+            cgp3.AddChars(new char[] { '<', '!', '|', '~', '/', '#', 'z', 'x', 'v' });
+            cgp3.AddCharsRange(new CharacterRange('@', 'M'));
+            cgp3.AddCharsRange(new CharacterRange('i', 'q'));
+            Assert.AreEqual("TEST3:[!#/<vxz|~][@-M][i-q]", cgp3.ToString(), "Тест 31");
+
+            cgp2.AddCharacterGroup(cgp3);
+            Assert.AreEqual("TEST2:[!#+/0123456789<_abe|~][@-M][O-R][i-q][t-z]", cgp2.ToString(), "Тест 32");
         }
     }
 }
